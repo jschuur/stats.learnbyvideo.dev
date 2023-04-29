@@ -9,7 +9,9 @@ export default function Footer() {
       </div>
       <div>
         Powered by <a href="https://tinybird.co">Tinybird</a>,{" "}
-        <a href="https://tremor.so">Tremor</a> and{" "}
+        <a href="https://tremor.so">Tremor</a>,{" "}
+        <a href="https://create.t3.gg/">T3</a>,{" "}
+        <a href="https://sst.dev">SST</a> and{" "}
         <a href="https://nextjs.org/">Next.js</a>
       </div>
     </footer>
