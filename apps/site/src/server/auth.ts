@@ -1,11 +1,11 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@statslearnbyvideodev/db";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { prisma } from "~/server/db";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

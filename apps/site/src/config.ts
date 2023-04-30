@@ -1,0 +1,2 @@
+export const TITLE_TRUNCATE_LENGTH = 160;
+export const CHANNEL_NAME_TRUNCATE_LENGTH = 40;

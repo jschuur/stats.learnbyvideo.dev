@@ -1,6 +1,7 @@
-import { Card, LineChart, Title } from "@tremor/react";
+import { BarChart, Card, Title } from "@tremor/react";
 
 import { type VideoUploadsChartData } from "~/types.js";
+
 type Props = {
   chartData: VideoUploadsChartData | undefined;
 };
@@ -12,12 +13,12 @@ export default function VideoUploadsChart({ chartData }: Props) {
   return chartData?.length ? (
     <Card>
       <Title>Uploads</Title>
-      <LineChart
+      <BarChart
         className="mt-6"
         data={chartData}
         index="date"
         categories={["Uploads"]}
-        colors={["blue"]}
+        colors={["emerald"]}
         valueFormatter={dataFormatter}
         yAxisWidth={40}
       />

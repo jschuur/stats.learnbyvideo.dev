@@ -1,3 +1,5 @@
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
+
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
@@ -13,6 +15,13 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+
+    return config;
   },
 };
 export default config;

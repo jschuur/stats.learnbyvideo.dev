@@ -1,0 +1,26 @@
+{
+  "name": "@statslearnbyvideodev/db",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "exports": "./dist/index.js",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo node_modules",
+    "db:generate": "pnpm with-env prisma generate",
+    "db:push": "pnpm with-env prisma db push --skip-generate",
+    "dev": "pnpm with-env prisma studio --port 5556",
+    "with-env": "dotenv -e ../../.env --",
+    "postinstall": "pnpm run build && pnpm run db:generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.13.0",
+    "@types/node": "^18.15.5"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.2.1",
+    "prisma": "^4.13.0",
+    "typescript": "^5.0.4"
+  }
+}

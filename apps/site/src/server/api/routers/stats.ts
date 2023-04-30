@@ -1,44 +1,72 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-const videoUploadData = [
-  {
-    date: "2023-01-01",
-    Uploads: 174,
-  },
-  {
-    date: "2023-01-02",
-    Uploads: 180,
-  },
-  {
-    date: "2023-01-03",
-    Uploads: 210,
-  },
-  {
-    date: "2023-01-04",
-    Uploads: 197,
-  },
-  {
-    date: "2023-01-05",
-    Uploads: 258,
-  },
-  {
-    date: "2023-01-06",
-    Uploads: 207,
-  },
-  {
-    date: "2023-01-07",
-    Uploads: 223,
-  },
-];
+const TIMEFRAME_DAYS = 7;
 
-const cardStats = {
-  recentVideos: 12345,
-  activeChannels: 345,
-  totalViews: 12345678,
-  liveStreams: 68,
-};
+const ACTIVE_CHANNELS_QUERY = `
+SELECT COUNT(DISTINCT "public"."Video"."channelId")
+FROM "public"."Video"
+WHERE DATE("publishedAt") > NOW() - INTERVAL '${TIMEFRAME_DAYS} days'`;
+
+const VIDEO_UPLOADS_QUERY = `
+SELECT
+	date_trunc('hour', "publishedAt") AS date,
+	COUNT(*)::INTEGER
+FROM
+	"Video"
+WHERE
+	DATE("publishedAt") > NOW() - INTERVAL '${TIMEFRAME_DAYS} days'
+GROUP BY
+	date_trunc('hour', "publishedAt")
+ORDER BY
+	date ASC`;
+
+type CountResult = [{ count: number }];
+type UploadResult = [{ date: Date; count: number }];
 
 export const statsRouter = createTRPCRouter({
-  metrics: publicProcedure.query(() => cardStats),
-  videoUploads: publicProcedure.query(() => videoUploadData),
+  metrics: publicProcedure.query(async ({ ctx }) => {
+    const where = {
+      publishedAt: {
+        gte: new Date(
+          (new Date() as unknown as number) -
+            60 * 60 * 24 * TIMEFRAME_DAYS * 1000
+        ),
+      },
+    };
+
+    const recentVideos = await ctx.prisma.video.count({ where });
+    const activeChannels = (
+      await ctx.prisma.$queryRawUnsafe<CountResult>(ACTIVE_CHANNELS_QUERY)
+    )?.[0]?.count;
+
+    const totalViews =
+      (
+        await ctx.prisma.video.aggregate({
+          where,
+          _sum: {
+            viewCount: true,
+          },
+        })
+      )?._sum.viewCount || undefined;
+    const liveStreams = await ctx.prisma.video.count({
+      where: { ...where, actualStartTime: { not: null } },
+    });
+
+    return {
+      recentVideos,
+      activeChannels,
+      totalViews,
+      liveStreams,
+    };
+  }),
+  videoUploads: publicProcedure.query(async ({ ctx }) => {
+    const uploads = await ctx.prisma.$queryRawUnsafe<UploadResult>(
+      VIDEO_UPLOADS_QUERY
+    );
+
+    return uploads.map((d) => ({
+      date: d.date.toISOString().replace("T", " ").replace(".000Z", ""),
+      Uploads: d.count,
+    }));
+  }),
 });

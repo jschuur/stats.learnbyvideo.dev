@@ -1,11 +1,13 @@
 export type Video = {
   title: string;
-  videoId: string;
-  channelName: string;
-  channelId?: string;
-  channelHandle?: string;
-  views: number;
-  // releaseDate: string;
+  youtubeId: string;
+  channel: {
+    channelName: string;
+    youtubeId?: string;
+    channelHandle?: string;
+  };
+  viewCount: number;
+  publishedAt: Date;
 };
 
 export type VideoUploadsChartData = Array<{

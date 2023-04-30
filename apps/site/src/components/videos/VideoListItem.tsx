@@ -1,34 +1,50 @@
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import ReactTimeAgo from "react-time-ago";
+
+TimeAgo.addDefaultLocale(en);
+
 import { type Video } from "~/types";
+import { truncateAt } from "~/utils/utils";
 
 type Props = {
   video: Video;
   rank: number;
 };
 
+import { CHANNEL_NAME_TRUNCATE_LENGTH, TITLE_TRUNCATE_LENGTH } from "~/config";
+
 export default function VideoListItem({ video, rank }: Props) {
   return (
     <tr className="transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
-      <td className="w-10 whitespace-nowrap px-6 py-1 font-medium">
+      <td className="whitespace-nowrap px-3 py-1 text-end align-top">
         {rank + 1}
       </td>
-      <td className="whitespace-nowrap px-6 py-1">
-        <a href={`https://youtube.com/watch?v=${video.videoId}`}>
-          {video.title}
+      <td className="px-3 py-1 align-top">
+        <a href={`https://youtube.com/watch?v=${video.youtubeId}`}>
+          {truncateAt(TITLE_TRUNCATE_LENGTH, video.title)}
         </a>
       </td>
-      <td className="whitespace-nowrap px-6 py-1">
+      <td className="px-3 py-1 align-top">
         <a
           href={
-            video?.channelHandle
-              ? `https://youtube.com/@${video?.channelHandle}`
-              : `https://youtube.com/channel/${video?.channelId || ""}`
+            video?.channel.channelHandle
+              ? `https://youtube.com/@${video.channel?.channelHandle}`
+              : `https://youtube.com/channel/${video.channel?.youtubeId || ""}`
           }
         >
-          {video.channelName}
+          {truncateAt(CHANNEL_NAME_TRUNCATE_LENGTH, video.channel.channelName)}
         </a>
       </td>
-      <td className="whitespace-nowrap px-6 py-1 text-end">
-        {Intl.NumberFormat().format(video.views)}
+      <td className="whitespace-nowrap px-3 py-1 text-end align-top tabular-nums">
+        {Intl.NumberFormat().format(video.viewCount)}
+      </td>
+      <td className="whitespace-nowrap px-3 py-1 text-end align-top">
+        <ReactTimeAgo
+          date={video.publishedAt}
+          locale="en-US"
+          timeStyle={"mini"}
+        />
       </td>
     </tr>
   );

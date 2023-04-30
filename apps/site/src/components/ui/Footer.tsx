@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="my-12 text-center">
+    <footer className="mt-10 text-center">
       <div>
         From <a href="https://twitter.com/joostschuur">Joost Schuur</a> &middot;{" "}
         <a href="https://twitter.com/learnbyvideodev">@learnbyvideodev</a>{" "}
