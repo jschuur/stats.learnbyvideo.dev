@@ -11,8 +11,14 @@ import VideoLists from "~/components/videos/Videos";
 import { api } from "~/utils/api";
 
 export default function Dashboard() {
-  const { data: metrics } = api.stats.metrics.useQuery();
-  const { data: videoUploads } = api.stats.videoUploads.useQuery();
+  const { data: metrics } = api.stats.metrics.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+  const { data: videoUploads } = api.stats.videoUploads.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <div className="flex flex-col">

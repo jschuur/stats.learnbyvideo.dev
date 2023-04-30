@@ -1,4 +1,10 @@
+import { prisma } from "@statslearnbyvideodev/db";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+
 import Head from "next/head";
+import SuperJSON from "superjson";
+import { appRouter } from "~/server/api/root";
 
 import Dashboard from "~/components/Dashboard";
 import Footer from "~/components/ui/Footer";
@@ -17,6 +23,28 @@ export default function Home() {
         <Dashboard />
         <Footer />
       </main>
+      {process.env.NODE_ENV !== "production" && (
+        <ReactQueryDevtools initialIsOpen={true} />
+      )}
     </>
   );
+}
+
+export async function getStaticProps() {
+  const ssg = createServerSideHelpers({
+    router: appRouter,
+    transformer: SuperJSON,
+    ctx: { session: null, prisma },
+  });
+
+  await ssg.stats.metrics.prefetch();
+  await ssg.stats.videoUploads.prefetch();
+  await ssg.stats.popular.prefetch();
+  await ssg.stats.recent.prefetch();
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
 }

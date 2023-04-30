@@ -7,8 +7,14 @@ import { api } from "~/utils/api";
 
 export default function VideoLists() {
   const [videoList, setVideoList] = useState("1");
-  const { data: popularVideos } = api.videos.popular.useQuery();
-  const { data: recentVideos } = api.videos.recent.useQuery();
+  const { data: popularVideos } = api.stats.popular.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+  const { data: recentVideos } = api.stats.recent.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <Card>

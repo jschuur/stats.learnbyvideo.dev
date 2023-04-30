@@ -16,7 +16,7 @@ import { CHANNEL_NAME_TRUNCATE_LENGTH, TITLE_TRUNCATE_LENGTH } from "~/config";
 
 export default function VideoListItem({ video, rank }: Props) {
   return (
-    <tr className="transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+    <tr className="transition duration-300 ease-in-out hover:bg-neutral-100">
       <td className="whitespace-nowrap px-3 py-1 text-end align-top">
         {rank + 1}
       </td>
