@@ -48,6 +48,7 @@ export async function getMetrics() {
   });
 
   return {
+    _lastUpdated: new Date(),
     recentVideos,
     activeChannels,
     totalViews,

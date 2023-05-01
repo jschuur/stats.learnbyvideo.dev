@@ -25,6 +25,4 @@ import { getMetrics, getPopularVideos, getRecentVideos, getVideoUploads } from '
 
     process.exit(1);
   }
-
-  process.exit(0);
 })();

@@ -16,6 +16,7 @@ export type VideoUploadsChartData = Array<{
 }>;
 
 export type Metrics = {
+  _lastUpdated: Date;
   recentVideos: number;
   activeChannels: number;
   totalViews: number;
