@@ -13,10 +13,18 @@ import { getMetrics, getPopularVideos, getRecentVideos, getVideoUploads } from '
     await updateField('popularVideos', getPopularVideos);
     await updateField('recentVideos', getRecentVideos);
 
+    const url = `${process.env.NEXTAUTH_URL}/api/update?secret=${process.env.REVALIDATE_SECRET_TOKEN}`;
+    console.log('Revalidating homepage... ');
+    await fetch(url);
+
     console.log('Done');
 
     process.exit(0);
   } catch (e) {
     console.error(e);
+
+    process.exit(1);
   }
+
+  process.exit(0);
 })();

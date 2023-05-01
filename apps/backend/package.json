@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "update": "node dist/updateCache.js"
+    "update": "node dist/updateCache.js",
+    "postinstall": "pnpm run build"
   },
   "dependencies": {
     "@statslearnbyvideodev/db": "workspace:^",

@@ -1,6 +1,10 @@
-import { type AppType } from "next/app";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { type AppType } from "next/app";
+
+TimeAgo.addDefaultLocale(en);
 
 import { api } from "~/utils/api";
 
