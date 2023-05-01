@@ -10,6 +10,12 @@ export function connectRedis() {
   return client.connect();
 }
 
+export async function quitRedisAndExit(exitCode: number) {
+  if (client) await client.quit();
+
+  process.exit(exitCode);
+}
+
 export async function updateField(field: string, getter: () => Promise<any>) {
   const startTime = Date.now();
 

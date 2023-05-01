@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { connectRedis, updateField } from './lib.js';
+import { connectRedis, quitRedisAndExit, updateField } from './lib.js';
 import { getMetrics, getPopularVideos, getRecentVideos, getVideoUploads } from './queries.js';
 
 (async () => {
@@ -19,10 +19,10 @@ import { getMetrics, getPopularVideos, getRecentVideos, getVideoUploads } from '
 
     console.log('Done');
 
-    process.exit(0);
+    quitRedisAndExit(0);
   } catch (e) {
     console.error(e);
 
-    process.exit(1);
+    quitRedisAndExit(1);
   }
 })();
