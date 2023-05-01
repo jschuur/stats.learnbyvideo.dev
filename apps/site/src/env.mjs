@@ -21,6 +21,7 @@ export const env = createEnv({
       process.env.VERCEL ? z.string().min(1) : z.string().url()
     ),
     REVALIDATE_SECRET_TOKEN: z.string().min(1),
+    REDIS_URL: z.string().url(),
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   },
 
@@ -41,5 +42,6 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     REVALIDATE_SECRET_TOKEN: process.env.REVALIDATE_SECRET_TOKEN,
+    REDIS_URL: process.env.REDIS_URL,
   },
 });

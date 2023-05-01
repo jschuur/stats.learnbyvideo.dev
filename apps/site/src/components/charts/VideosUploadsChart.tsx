@@ -3,19 +3,19 @@ import { BarChart, Card, Title } from "@tremor/react";
 import { type VideoUploadsChartData } from "~/types.js";
 
 type Props = {
-  chartData: VideoUploadsChartData | undefined;
+  chartData: VideoUploadsChartData | undefined | null;
 };
 
 const dataFormatter = (number: number) =>
   `${Intl.NumberFormat("us").format(number).toString()}`;
 
 export default function VideoUploadsChart({ chartData }: Props) {
-  return chartData?.length ? (
+  return (
     <Card>
       <Title>Uploads</Title>
       <BarChart
         className="mt-6"
-        data={chartData}
+        data={chartData || []}
         index="date"
         categories={["Uploads"]}
         colors={["emerald"]}
@@ -23,5 +23,5 @@ export default function VideoUploadsChart({ chartData }: Props) {
         yAxisWidth={40}
       />
     </Card>
-  ) : null;
+  );
 }

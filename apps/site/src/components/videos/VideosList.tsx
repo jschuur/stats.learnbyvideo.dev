@@ -2,7 +2,7 @@ import VideoListItem from "~/components/videos/VideoListItem";
 import { type Video } from "~/types";
 
 type Props = {
-  videos: Video[] | undefined;
+  videos: Video[] | null | undefined;
 };
 
 export default function VideoList({ videos }: Props) {

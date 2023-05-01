@@ -1,4 +1,5 @@
 import { statsRouter } from "~/server/api/routers/stats";
+import { videosRouter } from "~/server/api/routers/videos";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   stats: statsRouter,
+  videos: videosRouter,
 });
 
 // export type definition of API

@@ -7,11 +7,11 @@ import { api } from "~/utils/api";
 
 export default function VideoLists() {
   const [videoList, setVideoList] = useState("1");
-  const { data: popularVideos } = api.stats.popular.useQuery(undefined, {
+  const { data: popularVideos } = api.videos.popular.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
-  const { data: recentVideos } = api.stats.recent.useQuery(undefined, {
+  const { data: recentVideos } = api.videos.recent.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
