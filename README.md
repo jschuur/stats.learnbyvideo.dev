@@ -8,7 +8,7 @@ A [stats dashboard](https://stats.learnbyvideo.dev) for [learnbyvideo.dev](https
 - [Tremor](https://tremor.so): Dashboard framework for React
 - [T3](https://create.t3.gg): Full-stack TypeScript development
 - [SST](https://sst.dev): Manage serverless infrastructure (scheduled data ingestion)
-- [Prisma](https://prisma.io): ORM for original YouTube video crawler
+- [Prisma](https://prisma.io): ORM for the original YouTube video crawler
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
 

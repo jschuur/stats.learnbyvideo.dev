@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { type Session } from "next-auth";
@@ -17,6 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
+      <Analytics />
     </SessionProvider>
   );
 };
