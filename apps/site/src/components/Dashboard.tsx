@@ -6,6 +6,7 @@ import RecentVideoCard from "~/components/cards/RecentVideoCard";
 import TotalViewsCard from "~/components/cards/TotalViewsCard";
 import VideoUploadsChart from "~/components/charts/VideosUploadsChart";
 import TimeframeSelect from "~/components/ui/TimeframeSelect";
+import TrendingVideos from "~/components/videos/TrendingVideos";
 import VideoLists from "~/components/videos/Videos";
 
 import { api } from "~/utils/api";
@@ -31,6 +32,8 @@ export default function Dashboard() {
         <TotalViewsCard count={metrics?.totalViews} />
         <LiveStreamsCard count={metrics?.liveStreams} />
       </Grid>
+
+      <TrendingVideos />
 
       <div className="mt-6">
         <VideoUploadsChart chartData={videoUploads} />
