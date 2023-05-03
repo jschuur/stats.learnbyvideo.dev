@@ -1,3 +1,9 @@
 {
-  "ignoreCommand": "npx turbo-ignore"
+  "ignoreCommand": "npx turbo-ignore",
+  "crons": [
+    {
+      "path": "/api/update",
+      "schedule": "4 * * * *"
+    }
+  ]
 }

@@ -7,7 +7,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "update:cache": "tsx util/update.ts"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
@@ -22,10 +23,13 @@
     "@trpc/react-query": "^10.23.0",
     "@trpc/server": "^10.23.0",
     "@vercel/analytics": "^1.0.0",
+    "@vercel/kv": "^0.1.1",
+    "dotenv": "^16.0.3",
     "javascript-time-ago": "^2.5.9",
     "lodash": "^4.17.21",
     "next": "^13.3.4",
     "next-auth": "^4.22.1",
+    "pretty-ms": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-time-ago": "^7.2.1",

@@ -17,8 +17,14 @@ export type VideoUploadsChartData = Array<{
 
 export type Metrics = {
   _lastUpdated: Date;
-  recentVideos: number;
-  activeChannels: number;
-  totalViews: number;
-  liveStreams: number;
+  recentVideos: number | undefined;
+  activeChannels: number | undefined;
+  totalViews: number | undefined;
+  liveStreams: number | undefined;
+};
+
+export type CacheData = {
+  _queryTime: number;
+  _lastUpdated: number;
+  data: unknown;
 };

@@ -1,4 +1,5 @@
-import { prisma } from '@statslearnbyvideodev/db';
+import { prisma } from "@statslearnbyvideodev/db";
+import type { Metrics, Video, VideoUploadsChartData } from "~/types";
 
 const TIMEFRAME_DAYS = 7;
 
@@ -23,16 +24,19 @@ ORDER BY
 type CountResult = [{ count: number }];
 type UploadResult = [{ date: Date; count: number }];
 
-export async function getMetrics() {
+export async function getMetrics(): Promise<Metrics> {
   const where = {
     publishedAt: {
-      gte: new Date((new Date() as unknown as number) - 60 * 60 * 24 * TIMEFRAME_DAYS * 1000),
+      gte: new Date(
+        (new Date() as unknown as number) - 60 * 60 * 24 * TIMEFRAME_DAYS * 1000
+      ),
     },
   };
 
-  const recentVideos = await prisma.video.count({ where });
-  const activeChannels = (await prisma.$queryRawUnsafe<CountResult>(ACTIVE_CHANNELS_QUERY))?.[0]
-    ?.count;
+  const recentVideos = (await prisma.video.count({ where })) || undefined;
+  const activeChannels =
+    (await prisma.$queryRawUnsafe<CountResult>(ACTIVE_CHANNELS_QUERY))?.[0]
+      ?.count || undefined;
 
   const totalViews =
     (
@@ -43,9 +47,10 @@ export async function getMetrics() {
         },
       })
     )?._sum.viewCount || undefined;
-  const liveStreams = await prisma.video.count({
-    where: { ...where, actualStartTime: { not: null } },
-  });
+  const liveStreams =
+    (await prisma.video.count({
+      where: { ...where, actualStartTime: { not: null } },
+    })) || undefined;
 
   return {
     _lastUpdated: new Date(),
@@ -55,11 +60,14 @@ export async function getMetrics() {
     liveStreams,
   };
 }
-export async function getVideoUploads() {
-  const uploads = await prisma.$queryRawUnsafe<UploadResult>(VIDEO_UPLOADS_QUERY);
+
+export async function getVideoUploads(): Promise<VideoUploadsChartData> {
+  const uploads = await prisma.$queryRawUnsafe<UploadResult>(
+    VIDEO_UPLOADS_QUERY
+  );
 
   return uploads.map((d) => ({
-    date: d.date.toISOString().replace('T', ' ').replace('.000Z', ''),
+    date: d.date.toISOString().replace("T", " ").replace(".000Z", ""),
     Uploads: d.count,
   }));
 }
@@ -68,11 +76,13 @@ export const getPopularVideos = () =>
   prisma.video.findMany({
     where: {
       publishedAt: {
-        gte: new Date((new Date() as unknown as number) - 60 * 60 * 24 * 7 * 1000),
+        gte: new Date(
+          (new Date() as unknown as number) - 60 * 60 * 24 * 7 * 1000
+        ),
       },
     },
     orderBy: {
-      viewCount: 'desc',
+      viewCount: "desc",
     },
     select: {
       title: true,
@@ -87,12 +97,12 @@ export const getPopularVideos = () =>
       },
     },
     take: 100,
-  });
+  }) as Promise<Video[]>;
 
-export async function getRecentVideos() {
+export async function getRecentVideos(): Promise<Video[]> {
   return prisma.video.findMany({
     orderBy: {
-      publishedAt: 'desc',
+      publishedAt: "desc",
     },
     select: {
       title: true,
@@ -107,5 +117,5 @@ export async function getRecentVideos() {
       },
     },
     take: 100,
-  });
+  }) as Promise<Video[]>;
 }
