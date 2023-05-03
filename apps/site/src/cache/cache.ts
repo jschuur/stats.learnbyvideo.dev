@@ -1,6 +1,5 @@
 import kv from "@vercel/kv";
 import prettyMilliseconds from "pretty-ms";
-import { createClient, type RedisClientType } from "redis";
 import superjson from "superjson";
 import { type SuperJSONResult } from "superjson/dist/types.js";
 
@@ -12,22 +11,10 @@ import {
 } from "~/cache/queries";
 import type { CacheData, Metrics, Video, VideoUploadsChartData } from "~/types";
 
-let client: RedisClientType;
-
-export function connectRedis() {
-  client = createClient({ url: process.env.REDIS_URL });
-
-  return client.connect();
-}
-
-export async function quitRedis() {
-  if (client) await client.quit();
-}
-
-async function updateField<T>(field: string, getter: () => Promise<T>) {
+export async function setCacheKey<T>(key: string, getter: () => Promise<T>) {
   const startTime = Date.now();
 
-  process.stdout.write(`Querying ${field}...`);
+  process.stdout.write(`Querying ${key}...`);
   const data = await getter();
 
   const endTime = Date.now();
@@ -41,7 +28,7 @@ async function updateField<T>(field: string, getter: () => Promise<T>) {
     (typeof data === "object" && Object.keys(data).length === 0)
   ) {
     console.log(
-      `Query returned ${JSON.stringify(data)} for ${field}, skipping\n`
+      `Query returned ${JSON.stringify(data)} for ${key}, skipping\n`
     );
 
     return;
@@ -53,32 +40,35 @@ async function updateField<T>(field: string, getter: () => Promise<T>) {
     data,
   };
 
-  console.log(`Saving ${field}...`);
-  await kv.set(field, superjson.stringify(value));
+  console.log(`Saving ${key}...`);
+  await kv.set(`${key}:${process.env.NODE_ENV}`, superjson.serialize(value));
 
-  console.log(`${field} set\n`);
+  console.log(`${key} set\n`);
+}
+
+export async function getCacheKey<T>(key: string): Promise<T | null> {
+  // kv.get already returns the parsed JSON
+  const cachedValue = await kv.get<SuperJSONResult>(
+    `${key}:${process.env.NODE_ENV}`
+  );
+
+  const res = cachedValue
+    ? superjson.deserialize<CacheData & { data: T }>(cachedValue).data
+    : null;
+  return res;
 }
 
 export async function updateCache() {
   try {
     console.log("Updating cache...\n");
 
-    await updateField<Metrics>("metrics", getMetrics);
-    await updateField<VideoUploadsChartData>("videoUploads", getVideoUploads);
-    await updateField<Video[]>("popularVideos", getPopularVideos);
-    await updateField<Video[]>("recentVideos", getRecentVideos);
+    await setCacheKey<Metrics>("metrics", getMetrics);
+    await setCacheKey<VideoUploadsChartData>("videoUploads", getVideoUploads);
+    await setCacheKey<Video[]>("popularVideos", getPopularVideos);
+    await setCacheKey<Video[]>("recentVideos", getRecentVideos);
 
     console.log("Done");
   } catch (e) {
     console.error(e);
   }
-}
-
-export async function getCacheKey<T>(key: string): Promise<T | null> {
-  const cachedValue = await kv.get<SuperJSONResult>(key);
-
-  const res = cachedValue
-    ? superjson.deserialize<CacheData & { data: T }>(cachedValue).data
-    : null;
-  return res;
 }
