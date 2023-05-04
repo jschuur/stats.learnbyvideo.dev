@@ -16,8 +16,10 @@ export default async function handler(
       await res.revalidate("/");
 
       return res.redirect("/");
-    } catch (err) {
-      return res.status(500).send("Error revalidating: ${err.message}");
+    } catch (err: unknown) {
+      return res
+        .status(500)
+        .send(`Error revalidating: ${(err as Error).message}`);
     }
   } else {
     return res.status(401).json({ message: "Invalid token" });
