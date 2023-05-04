@@ -16,10 +16,12 @@ export default async function handler(
       await updateCache();
       // await res.revalidate("/");
 
+      let revalidateUrl = `${env.NEXTAUTH_URL}/api/revalidate`;
+      if (!revalidateUrl.startsWith("http"))
+        revalidateUrl = `https://${revalidateUrl}`;
+
       // workaround for res.revalidate() not working via cron https://github.com/vercel/next.js/discussions/49164
-      await fetch(
-        `${env.NEXTAUTH_URL}/api/revalidate?secret=${env.REVALIDATE_SECRET_TOKEN}`
-      );
+      await fetch(`${revalidateUrl}?secret=${env.REVALIDATE_SECRET_TOKEN}`);
 
       return res.redirect("/");
     } catch (err: unknown) {
